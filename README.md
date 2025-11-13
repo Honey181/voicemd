@@ -4,7 +4,7 @@ A modern, offline voice analysis tool that predicts speaker characteristics base
 
 ## Features
 
-- 🎨 **Modern Interface** - Clean, intuitive GUI with Fluent Design
+- 🎨 **Modern Interface** - Clean, intuitive GUI with modern design
 - 🔄 **Multi-Model Support** - Switch between different trained models in real-time
 - 💾 **Fully Offline** - No internet required after initial setup
 - 🎤 **Multiple Formats** - Supports WAV, MP3, OGG, FLAC, M4A
