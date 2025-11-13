@@ -17,11 +17,11 @@ RELEASE_TAG = "v1.0.0"
 
 MODELS = {
     "best_model (Small dataset).pt": {
-        "url": f"https://github.com/{GITHUB_USER}/{GITHUB_REPO}/releases/download/{RELEASE_TAG}/best_model_small.pt",
+        "url": f"https://github.com/{GITHUB_USER}/{GITHUB_REPO}/releases/download/{RELEASE_TAG}/best_model.Small.dataset.pt",
         "size_mb": 2.2
     },
     "best_model_commonvoice (Commonvoice).pt": {
-        "url": f"https://github.com/{GITHUB_USER}/{GITHUB_REPO}/releases/download/{RELEASE_TAG}/best_model_commonvoice.pt",
+        "url": f"https://github.com/{GITHUB_USER}/{GITHUB_REPO}/releases/download/{RELEASE_TAG}/best_model_commonvoice.Commonvoice.pt",
         "size_mb": 2.2
     }
 }
