@@ -32,14 +32,26 @@ def compute_specgram(waveform, sr, spec_type, normalize):
 
 
 def load_waveform(fname):
-    # load using torchaudio, its much faster than librosa
-    waveform, sr = torchaudio.load(fname)
-    waveform = torch.squeeze(waveform).detach().numpy()
-
-    # if it's stereo, convert it to mono
-    if waveform.shape[0] == 2:
-        waveform = librosa.to_mono(waveform)
-
+    # Load audio using soundfile backend (works without FFmpeg)
+    import soundfile as sf
+    
+    try:
+        # Use soundfile directly - most reliable, works without FFmpeg
+        waveform, sr = sf.read(fname, always_2d=False)
+        
+        # Convert to mono if stereo
+        if waveform.ndim > 1:
+            # Average channels
+            waveform = np.mean(waveform, axis=1)
+            
+    except Exception as e:
+        # If soundfile fails, try librosa as last resort
+        try:
+            waveform, sr = librosa.load(fname, sr=None, mono=True)
+        except Exception as e2:
+            raise RuntimeError(f"Could not load audio file {fname}. "
+                             f"Soundfile error: {e}. Librosa error: {e2}")
+    
     # loop the sound to make the segment long enough
     min_seconds = 5
     while (len(waveform) / sr) < min_seconds:

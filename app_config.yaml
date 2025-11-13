@@ -1,0 +1,19 @@
+# VoiceMD Standalone App Configuration
+# This file contains the model configuration for offline analysis
+
+# Model architecture
+architecture: longfilter
+in_channels: 1
+
+# Audio processing parameters
+spec_type: librosa_melspec
+normalize_spectrums: true
+window_len: 256
+
+# Batch processing
+batch_size: 1
+
+# Other settings
+pretrained: true
+seed: 42
+

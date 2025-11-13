@@ -1,0 +1,12 @@
+# VoiceMD Models Configuration
+# Define available models for the standalone app
+
+models:
+  - name: "Small Dataset Model"
+    file: "best_model (Small dataset).pt"
+    description: "Trained on small dataset - faster, good for general use"
+    
+  - name: "CommonVoice Model"
+    file: "best_model_commonvoice (Commonvoice).pt"
+    description: "Trained on CommonVoice dataset - more robust, diverse accents"
+

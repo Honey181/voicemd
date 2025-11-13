@@ -1,41 +1,123 @@
-[![Build Status](https://travis-ci.com/jerpint/voicemd.png?branch=master)](https://travis-ci.com/jerpint/voicemd)
+# VoiceMD - Voice Analysis Application
 
-# voicemd
+A modern, offline voice analysis tool that predicts speaker characteristics based on acoustic features.
 
+## Features
 
-Voice classification
+- 🎨 **Modern Interface** - Clean, intuitive GUI with Fluent Design
+- 🔄 **Multi-Model Support** - Switch between different trained models in real-time
+- 💾 **Fully Offline** - No internet required after initial setup
+- 🎤 **Multiple Formats** - Supports WAV, MP3, OGG, FLAC, M4A
+- 📦 **Easy Installation** - Simple pip install, models auto-download
 
-## Setup
+## Installation
 
-Clone the repo and install the project dependencies. It is recommended to use a virtual environment (e.g. conda)
+### Quick Install (Recommended)
 
-    git clone https://github.com/jerpint/voicemd
-    cd voicemd
-    pip install -e .
+```bash
+pip install git+https://github.com/Honey181/voicemd.git
+```
 
+Then run:
 
-## Make a prediction
+```bash
+voicemd-gui
+```
 
-### From script
-First, download the weights locally:
+Models (~4.4 MB) will automatically download from GitHub Releases on first launch.
 
-    cd ~/voicemd/voicemd
-    curl -L -o model.pt "https://www.dropbox.com/s/r3ydpfxr3h4vlzg/best_model_commonvoice?dl=1"
+### Requirements
 
-Then run as a script:
+- Python 3.8 or higher
+- ~500 MB disk space (including models and dependencies)
+- Internet connection for first-time model download only
 
-    from voicemd.predict import make_a_prediction
+### Manual Installation
 
-    make_a_prediction(
-        sound_filepath='/path/to/your/sound.wav',
-        config_filepath='config.yaml',
-        best_model_path='model.pt'
-    )
+If you prefer to run from source:
 
+```bash
+# Clone the repository
+git clone https://github.com/Honey181/voicemd.git
+cd voicemd
 
-### Online Demo (Colab)
+# Install dependencies
+pip install -r requirements_app.txt
 
-* Small dataset: Use the demo colab [here](https://colab.research.google.com/github/jerpint/voicemd/blob/master/voicemd/colab/VoiceMD.ipynb)
-* Commonvoice dataset: Use the demo colab [here](https://colab.research.google.com/github/jerpint/voicemd/blob/master/voicemd/colab/VoiceMD-CV.ipynb)
+# Run the app
+python app_gui.py
+```
 
+Models will auto-download on first run, or manually run:
+```bash
+python download_models.py
+```
 
+## Usage
+
+1. Select a model from the dropdown (Small Dataset or CommonVoice)
+2. Browse for an audio file (WAV, MP3, OGG, FLAC, M4A)
+3. Click "Analyze Voice"
+4. View results instantly
+
+## Multi-Model Support
+
+VoiceMD includes two trained models that can be switched at runtime:
+
+- **Small Dataset Model** - Faster, good for general use
+- **CommonVoice Model** - More robust, handles diverse accents
+
+Switch between models using the dropdown in the app. No restart required!
+
+## Troubleshooting
+
+### Models Won't Download
+
+**Download manually:**
+1. Go to https://github.com/Honey181/voicemd/releases
+2. Download both `.pt` model files
+3. Place them in the project root directory
+
+**Or use the download script:**
+```bash
+python download_models.py
+```
+
+### Import Errors
+
+Update dependencies:
+```bash
+pip install --upgrade -r requirements_app.txt
+```
+
+### Audio Loading Issues
+
+The app uses soundfile/librosa (no FFmpeg required). If you still get errors:
+- **Windows:** `choco install ffmpeg`
+- **macOS:** `brew install ffmpeg`
+- **Linux:** `sudo apt install ffmpeg`
+
+## Technical Details
+
+- **Framework:** PyTorch for model inference
+- **GUI:** Tkinter for cross-platform interface
+- **Audio Processing:** librosa, soundfile, torchaudio
+- **No FFmpeg Required:** Uses soundfile/librosa for audio loading
+
+## License
+
+MIT License - Copyright (c) 2020, Jeremy Pinto
+
+See `LICENSE` file for full details.
+
+## Credits
+
+**Original Project:** [VoiceMD](https://github.com/jerpint/voicemd) by [@jerpint](https://github.com/jerpint) (Jeremy Pinto)
+
+**Enhanced by:** [@Honey181](https://github.com/Honey181) - Modern UI and easy installation
+
+This project builds upon the excellent work of the original VoiceMD team. All credit for the model architecture, training pipeline, and core functionality goes to them.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

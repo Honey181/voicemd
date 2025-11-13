@@ -1,22 +1,56 @@
-from setuptools import setup, find_packages
+"""
+VoiceMD - Voice Analysis Application
+Setup configuration
+"""
 
+from setuptools import setup, find_packages
+from pathlib import Path
+
+# Read README
+readme_file = Path(__file__).parent / "README.md"
+long_description = readme_file.read_text(encoding='utf-8') if readme_file.exists() else ""
 
 setup(
-    name='voicemd',
-    version='0.0.1',
-    packages=find_packages(include=['voicemd', 'voicemd.*']),
-    python_requires='>=3.9',
+    name="voicemd",
+    version="1.0.0",
+    author="Honey181 (based on work by Jeremy Pinto)",
+    author_email="",
+    description="Modern offline voice analysis application",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/Honey181/voicemd",
+    packages=find_packages(),
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    ],
+    python_requires=">=3.8",
     install_requires=[
-        'librosa==0.10.0.post2',
-        'mlflow==2.4.1',
-        'numpy==1.24.3',
-        'torch==2.0.1',
-        'torchaudio==2.0.2',
-        'torchvision==0.15.2',
+        "torch>=1.13.0",
+        "torchaudio>=0.13.0",
+        "torchvision>=0.15.0",
+        "numpy>=1.21.0",
+        "librosa>=0.10.0",
+        "soundfile>=0.12.0",
+        "scipy>=1.9.0",
+        "PyYAML>=6.0",
+        "requests>=2.28.0",
     ],
     entry_points={
         'console_scripts': [
-            'main=voicemd.main:main'
+            'voicemd-gui=app_gui:main',
+            'voicemd-download=download_models:main',
         ],
-    }
+    },
+    include_package_data=True,
+    package_data={
+        '': ['*.yaml', 'README.md', 'LICENSE'],
+    },
 )
