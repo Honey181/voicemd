@@ -20,6 +20,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Honey181/voicemd",
     packages=find_packages(),
+    py_modules=['app_gui', 'app_predictor', 'download_models'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
