@@ -160,54 +160,91 @@ class VoiceAnalyzer:
         Returns:
             List of dictionaries with model info
         """
-        # Get base path (handles PyInstaller bundled app)
+        # Model metadata (embedded as fallback)
+        MODEL_DESCRIPTIONS = {
+            'best_model (Small dataset).pt': {
+                'name': 'Small Dataset Model',
+                'description': 'Trained on small dataset - faster, good for general use'
+            },
+            'best_model_commonvoice (Commonvoice).pt': {
+                'name': 'CommonVoice Model',
+                'description': 'Trained on CommonVoice dataset - more robust, diverse accents'
+            }
+        }
+        
+        # Determine search paths
+        search_paths = []
+        
         if getattr(sys, 'frozen', False):
             # Running as compiled exe
-            base_path = Path(sys._MEIPASS)
+            search_paths.append(Path(sys._MEIPASS))
         else:
-            # Running as script
-            base_path = Path('.')
-        
-        models_config_path = base_path / 'models_config.yaml'
-        
-        # Try to load from config file
-        if models_config_path.exists():
-            try:
-                with open(models_config_path, 'r') as f:
-                    config = yaml.safe_load(f)
-                    models = []
-                    for model_info in config.get('models', []):
-                        model_path = base_path / model_info['file']
-                        if model_path.exists():
-                            models.append({
-                                'name': model_info['name'],
-                                'path': str(model_path),
-                                'description': model_info.get('description', ''),
-                                'size_mb': model_path.stat().st_size / (1024 * 1024)
-                            })
-                    if models:
-                        return models
-            except Exception as e:
-                print(f"Error loading models config: {e}")
-        
-        # Fallback: search for model files
-        possible_paths = [
-            ('best_model (Small dataset).pt', 'Small Dataset Model'),
-            ('best_model_commonvoice (Commonvoice).pt', 'CommonVoice Model'),
-            ('best_model.pt', 'Default Model'),
-            ('model.pt', 'Model'),
-        ]
+            # Check if running from source (voicemd package exists)
+            if Path('voicemd').exists():
+                search_paths.append(Path('.'))
+            # Check user home directory (for pip installed version)
+            home_models = Path.home() / '.voicemd' / 'models'
+            if home_models.exists():
+                search_paths.append(home_models)
+            # Also check current directory
+            search_paths.append(Path('.'))
         
         models = []
-        for path, name in possible_paths:
-            full_path = base_path / path
-            if full_path.exists():
-                models.append({
-                    'name': name,
-                    'path': str(full_path),
-                    'description': '',
-                    'size_mb': full_path.stat().st_size / (1024 * 1024)
-                })
+        found_files = set()  # Track found files to avoid duplicates
+        
+        # Try each search path
+        for base_path in search_paths:
+            # Try to load from config file first
+            models_config_path = base_path / 'models_config.yaml'
+            if models_config_path.exists():
+                try:
+                    with open(models_config_path, 'r') as f:
+                        config = yaml.safe_load(f)
+                        for model_info in config.get('models', []):
+                            model_path = base_path / model_info['file']
+                            if model_path.exists() and str(model_path) not in found_files:
+                                found_files.add(str(model_path))
+                                models.append({
+                                    'name': model_info['name'],
+                                    'path': str(model_path),
+                                    'description': model_info.get('description', ''),
+                                    'size_mb': model_path.stat().st_size / (1024 * 1024)
+                                })
+                except Exception as e:
+                    print(f"Error loading models config from {models_config_path}: {e}")
+            
+            # Search for model files directly
+            for filename, metadata in MODEL_DESCRIPTIONS.items():
+                full_path = base_path / filename
+                if full_path.exists() and str(full_path) not in found_files:
+                    found_files.add(str(full_path))
+                    models.append({
+                        'name': metadata['name'],
+                        'path': str(full_path),
+                        'description': metadata['description'],
+                        'size_mb': full_path.stat().st_size / (1024 * 1024)
+                    })
+        
+        # If no models found with descriptions, try generic search
+        if not models:
+            for base_path in search_paths:
+                fallback_paths = [
+                    ('best_model (Small dataset).pt', 'Small Dataset Model'),
+                    ('best_model_commonvoice (Commonvoice).pt', 'CommonVoice Model'),
+                    ('best_model.pt', 'Default Model'),
+                    ('model.pt', 'Model'),
+                ]
+                
+                for filename, name in fallback_paths:
+                    full_path = base_path / filename
+                    if full_path.exists() and str(full_path) not in found_files:
+                        found_files.add(str(full_path))
+                        models.append({
+                            'name': name,
+                            'path': str(full_path),
+                            'description': '',
+                            'size_mb': full_path.stat().st_size / (1024 * 1024)
+                        })
         
         return models
     

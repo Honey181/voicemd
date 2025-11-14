@@ -62,13 +62,29 @@ python download_models.py
 
 ## Uninstallation
 
-To completely remove VoiceMD from your system:
+### Remove the Application
 
 ```bash
 pip uninstall voicemd -y
 ```
 
-This will remove the application. The downloaded model files (~4.4 MB) remain in your user directory and can be manually deleted if desired.
+### Remove Downloaded Models (Optional)
+
+The model files (~4.4 MB) are stored separately and will remain after uninstalling. To completely remove them:
+
+**Windows:**
+```powershell
+Remove-Item -Recurse -Force "$env:USERPROFILE\.voicemd"
+```
+
+**macOS/Linux:**
+```bash
+rm -rf ~/.voicemd
+```
+
+**Location of models:**
+- When installed via pip: `~/.voicemd/models/` (or `%USERPROFILE%\.voicemd\models\` on Windows)
+- When running from source: Project root directory
 
 ## Multi-Model Support
 
