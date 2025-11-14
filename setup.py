@@ -52,6 +52,7 @@ setup(
     },
     include_package_data=True,
     package_data={
-        '': ['*.yaml', 'README.md', 'LICENSE'],
+        '': ['*.yaml', 'README.md', 'LICENSE', '*.pt'],
+        'voicemd': ['*.yaml'],
     },
 )

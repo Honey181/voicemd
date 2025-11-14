@@ -19,6 +19,18 @@ warnings.filterwarnings('ignore')
 
 # Import model components
 from voicemd.models.model_loader import load_model
+
+# Default configuration (embedded to avoid file dependency issues)
+DEFAULT_CONFIG = {
+    'architecture': 'longfilter',
+    'in_channels': 1,
+    'spec_type': 'librosa_melspec',
+    'normalize_spectrums': True,
+    'window_len': 256,
+    'batch_size': 1,
+    'pretrained': True,
+    'seed': 42
+}
 from voicemd.data.process_sound import load_waveform, compute_specgram
 
 
@@ -30,19 +42,28 @@ class VoiceAnalyzer:
         Initialize the voice analyzer
         
         Args:
-            config_path: Path to config.yaml file
+            config_path: Path to config.yaml file (optional - uses default if not found)
             model_path: Path to trained model weights
         """
-        # Default paths
+        # Load configuration
         if config_path is None:
-            config_path = self._find_config()
+            try:
+                config_path = self._find_config()
+                with open(config_path, 'r') as f:
+                    self.config = yaml.safe_load(f)
+                print(f"Loaded configuration from: {config_path}")
+            except FileNotFoundError:
+                # Use embedded default configuration
+                self.config = DEFAULT_CONFIG.copy()
+                config_path = "embedded"
+                print("Using embedded default configuration")
+        else:
+            with open(config_path, 'r') as f:
+                self.config = yaml.safe_load(f)
+            print(f"Loaded configuration from: {config_path}")
         
         self.config_path = config_path
         self.current_model_path = model_path
-        
-        # Load configuration
-        with open(config_path, 'r') as f:
-            self.config = yaml.safe_load(f)
         
         # Set device
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -88,15 +109,28 @@ class VoiceAnalyzer:
     
     def _find_config(self) -> str:
         """Find configuration file"""
-        possible_paths = [
+        # Try relative to current directory first (for local development)
+        local_paths = [
             'app_config.yaml',
             'voicemd/config.yaml',
             'config.yaml'
         ]
         
-        for path in possible_paths:
+        for path in local_paths:
             if Path(path).exists():
                 return path
+        
+        # Try relative to this file's directory (for installed package)
+        package_dir = Path(__file__).parent
+        package_paths = [
+            package_dir / 'app_config.yaml',
+            package_dir / '..' / 'app_config.yaml',
+            package_dir / 'config.yaml',
+        ]
+        
+        for path in package_paths:
+            if path.exists():
+                return str(path)
         
         raise FileNotFoundError("Could not find configuration file")
     

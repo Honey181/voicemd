@@ -1,0 +1,9 @@
+# Include configuration files
+include app_config.yaml
+include models_config.yaml
+include README.md
+include LICENSE
+
+# Include all yaml files in voicemd package
+recursive-include voicemd *.yaml
+
