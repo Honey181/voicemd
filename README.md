@@ -123,6 +123,32 @@ The app uses soundfile/librosa (no FFmpeg required). If you still get errors:
 - **macOS:** `brew install ffmpeg`
 - **Linux:** `sudo apt install ffmpeg`
 
+### LLVM Version Compatibility (Linux)
+
+If you get an error like `llvmlite only officially supports LLVM 20` during installation:
+
+**Option 1 - Use Conda (Recommended):**
+```bash
+conda create -n voicemd python=3.10
+conda activate voicemd
+conda install -c conda-forge llvmlite numba
+pip install git+https://github.com/Honey181/voicemd.git
+```
+
+**Option 2 - Install specific LLVM version:**
+```bash
+# Ubuntu/Debian
+sudo apt install llvm-14 llvm-14-dev
+export LLVM_CONFIG=/usr/bin/llvm-config-14
+pip install git+https://github.com/Honey181/voicemd.git
+```
+
+**Option 3 - Use older Python:**
+```bash
+# Python 3.9 or 3.10 have better llvmlite compatibility
+python3.10 -m pip install git+https://github.com/Honey181/voicemd.git
+```
+
 ## Technical Details
 
 - **Framework:** PyTorch for model inference
