@@ -60,6 +60,16 @@ python download_models.py
 3. Click "Analyze Voice"
 4. View results instantly
 
+## Uninstallation
+
+To completely remove VoiceMD from your system:
+
+```bash
+pip uninstall voicemd -y
+```
+
+This will remove the application. The downloaded model files (~4.4 MB) remain in your user directory and can be manually deleted if desired.
+
 ## Multi-Model Support
 
 VoiceMD includes two trained models that can be switched at runtime:

@@ -453,7 +453,7 @@ class ModernVoiceMDApp:
                 self.analyzer = VoiceAnalyzer(model_path=self.current_model_info['path'])
                 self.root.after(0, self._on_ready)
             except Exception as e:
-                self.root.after(0, lambda: self._show_error(str(e)))
+                self.root.after(0, lambda e=e: self._show_error(str(e)))
         
         threading.Thread(target=init, daemon=True).start()
     
@@ -477,9 +477,9 @@ class ModernVoiceMDApp:
         def switch():
             try:
                 success = self.analyzer.load_model_weights(self.current_model_info['path'])
-                self.root.after(0, lambda: self._on_switched(success))
+                self.root.after(0, lambda success=success: self._on_switched(success))
             except Exception as e:
-                self.root.after(0, lambda: self._show_error(str(e)))
+                self.root.after(0, lambda e=e: self._show_error(str(e)))
         
         threading.Thread(target=switch, daemon=True).start()
     
@@ -525,9 +525,9 @@ class ModernVoiceMDApp:
         def analyze():
             try:
                 results = self.analyzer.analyze(self.current_file)
-                self.root.after(0, lambda: self._on_done(results))
+                self.root.after(0, lambda results=results: self._on_done(results))
             except Exception as e:
-                self.root.after(0, lambda: self._on_error(str(e)))
+                self.root.after(0, lambda e=e: self._on_error(str(e)))
         
         threading.Thread(target=analyze, daemon=True).start()
     
