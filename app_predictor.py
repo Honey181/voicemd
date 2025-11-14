@@ -179,18 +179,24 @@ class VoiceAnalyzer:
             # Running as compiled exe
             search_paths.append(Path(sys._MEIPASS))
         else:
-            # Check if running from source (voicemd package exists)
-            if Path('voicemd').exists():
+            # Check if running from source directory
+            is_source = (Path('setup.py').exists() or 
+                        Path('pyproject.toml').exists() or
+                        (Path('voicemd').is_dir() and Path('app_gui.py').exists()))
+            
+            if is_source:
+                # Running from source - check current directory
                 search_paths.append(Path('.'))
-            # Check user home directory (for pip installed version)
-            home_models = Path.home() / '.voicemd' / 'models'
-            if home_models.exists():
-                search_paths.append(home_models)
-            # Also check current directory
-            search_paths.append(Path('.'))
+            else:
+                # Installed via pip - check user home directory first
+                home_models = Path.home() / '.voicemd' / 'models'
+                if home_models.exists():
+                    search_paths.append(home_models)
+                # Also check current directory as fallback
+                search_paths.append(Path('.'))
         
         models = []
-        found_files = set()  # Track found files to avoid duplicates
+        found_files = set()  # Track found files to avoid duplicates (use absolute paths)
         
         # Try each search path
         for base_path in search_paths:
@@ -202,28 +208,34 @@ class VoiceAnalyzer:
                         config = yaml.safe_load(f)
                         for model_info in config.get('models', []):
                             model_path = base_path / model_info['file']
-                            if model_path.exists() and str(model_path) not in found_files:
-                                found_files.add(str(model_path))
-                                models.append({
-                                    'name': model_info['name'],
-                                    'path': str(model_path),
-                                    'description': model_info.get('description', ''),
-                                    'size_mb': model_path.stat().st_size / (1024 * 1024)
-                                })
+                            if model_path.exists():
+                                # Use absolute path for deduplication
+                                abs_path = str(model_path.resolve())
+                                if abs_path not in found_files:
+                                    found_files.add(abs_path)
+                                    models.append({
+                                        'name': model_info['name'],
+                                        'path': str(model_path),
+                                        'description': model_info.get('description', ''),
+                                        'size_mb': model_path.stat().st_size / (1024 * 1024)
+                                    })
                 except Exception as e:
                     print(f"Error loading models config from {models_config_path}: {e}")
             
             # Search for model files directly
             for filename, metadata in MODEL_DESCRIPTIONS.items():
                 full_path = base_path / filename
-                if full_path.exists() and str(full_path) not in found_files:
-                    found_files.add(str(full_path))
-                    models.append({
-                        'name': metadata['name'],
-                        'path': str(full_path),
-                        'description': metadata['description'],
-                        'size_mb': full_path.stat().st_size / (1024 * 1024)
-                    })
+                if full_path.exists():
+                    # Use absolute path for deduplication
+                    abs_path = str(full_path.resolve())
+                    if abs_path not in found_files:
+                        found_files.add(abs_path)
+                        models.append({
+                            'name': metadata['name'],
+                            'path': str(full_path),
+                            'description': metadata['description'],
+                            'size_mb': full_path.stat().st_size / (1024 * 1024)
+                        })
         
         # If no models found with descriptions, try generic search
         if not models:
@@ -237,14 +249,17 @@ class VoiceAnalyzer:
                 
                 for filename, name in fallback_paths:
                     full_path = base_path / filename
-                    if full_path.exists() and str(full_path) not in found_files:
-                        found_files.add(str(full_path))
-                        models.append({
-                            'name': name,
-                            'path': str(full_path),
-                            'description': '',
-                            'size_mb': full_path.stat().st_size / (1024 * 1024)
-                        })
+                    if full_path.exists():
+                        # Use absolute path for deduplication
+                        abs_path = str(full_path.resolve())
+                        if abs_path not in found_files:
+                            found_files.add(abs_path)
+                            models.append({
+                                'name': name,
+                                'path': str(full_path),
+                                'description': '',
+                                'size_mb': full_path.stat().st_size / (1024 * 1024)
+                            })
         
         return models
     
