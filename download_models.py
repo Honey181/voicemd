@@ -29,8 +29,13 @@ MODELS = {
 
 def get_models_dir():
     """Get or create models directory"""
-    # Check if running from source
-    if Path('voicemd').exists():
+    # Check if running from source (look for setup.py or pyproject.toml in current dir)
+    is_source = (Path('setup.py').exists() or 
+                 Path('pyproject.toml').exists() or
+                 (Path('voicemd').is_dir() and Path('app_gui.py').exists()))
+    
+    if is_source:
+        # Running from source - save to current directory
         models_dir = Path('.')
     else:
         # Installed via pip - use user's home
