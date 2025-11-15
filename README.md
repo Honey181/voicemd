@@ -12,10 +12,16 @@ A modern, offline voice analysis tool that predicts speaker characteristics base
 
 ## Installation
 
-### Quick Install (Recommended)
+### Requirements
+
+- **Python 3.8+** (Recommended: 3.8-3.13. Python 3.14+ may have dependency compatibility issues with `numba`/`llvmlite` - use 3.13 if installation fails)
+- ~500 MB disk space (including models and dependencies)
+- Internet connection for first-time model download only
+
+### Quick Install (Recommended - No Git Required!)
 
 ```bash
-pip install git+https://github.com/Honey181/voicemd.git
+pip install voicemd-gui
 ```
 
 Then run:
@@ -26,11 +32,21 @@ voicemd-gui
 
 Models (~4.4 MB) will automatically download from GitHub Releases on first launch.
 
-### Requirements
+### Alternative Install (From GitHub)
 
-- Python 3.8 or higher
-- ~500 MB disk space (including models and dependencies)
-- Internet connection for first-time model download only
+If you want the latest development version:
+
+```bash
+pip install git+https://github.com/Honey181/voicemd.git
+```
+
+### Manual Install (From Source)
+
+1. Download the repository as ZIP from GitHub
+2. Extract it
+3. Open terminal in the extracted folder
+4. Run: `pip install .`
+5. Run: `voicemd-gui`
 
 ### Manual Installation
 
@@ -65,7 +81,7 @@ python download_models.py
 ### Remove the Application
 
 ```bash
-pip uninstall voicemd -y
+pip uninstall voicemd-gui -y
 ```
 
 ### Remove Downloaded Models (Optional)

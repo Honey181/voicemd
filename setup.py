@@ -11,7 +11,7 @@ readme_file = Path(__file__).parent / "README.md"
 long_description = readme_file.read_text(encoding='utf-8') if readme_file.exists() else ""
 
 setup(
-    name="voicemd",
+    name="voicemd-gui",
     version="1.0.0",
     author="Honey181 (based on work by Jeremy Pinto)",
     author_email="",
@@ -30,6 +30,8 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     python_requires=">=3.8",
