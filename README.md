@@ -14,7 +14,7 @@ A modern, offline voice analysis tool that predicts speaker characteristics base
 
 ### Requirements
 
-- **Python 3.8+** (Recommended: 3.8-3.13. Python 3.14+ may have dependency compatibility issues with `numba`/`llvmlite` - use 3.13 if installation fails)
+- **Python 3.8 - 3.13** (Python 3.14+ not yet supported - dependencies `numba`/`llvmlite` don't support 3.14. Use Python 3.13 or earlier)
 - ~500 MB disk space (including models and dependencies)
 - Internet connection for first-time model download only
 

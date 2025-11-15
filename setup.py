@@ -12,7 +12,7 @@ long_description = readme_file.read_text(encoding='utf-8') if readme_file.exists
 
 setup(
     name="voicemd-gui",
-    version="1.0.0",
+    version="1.0.1",
     author="Honey181 (based on work by Jeremy Pinto)",
     author_email="",
     description="Modern offline voice analysis application",
@@ -34,7 +34,7 @@ setup(
         "Programming Language :: Python :: 3.13",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.8,<3.14",
     install_requires=[
         "torch>=1.13.0",
         "torchaudio>=0.13.0",
