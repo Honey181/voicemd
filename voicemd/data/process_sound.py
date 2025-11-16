@@ -9,16 +9,19 @@ def compute_specgram(waveform, sr, spec_type, normalize):
     if spec_type == 'librosa_melspec':
         specgram = librosa.feature.melspectrogram(y=waveform, sr=sr, hop_length=512, win_length=512, fmax=8000, n_mels=80)
         specgram = librosa.power_to_db(specgram, ref=np.max)
-        specgram = torch.tensor(specgram).unsqueeze(dim=0)
+        specgram = torch.tensor(specgram, dtype=torch.float32).unsqueeze(dim=0)
 
     elif spec_type == 'pytorch_spec':
-        specgram = torchaudio.transforms.Spectrogram(n_fft=400, normalized=True)(waveform)
+        waveform_tensor = torch.tensor(waveform, dtype=torch.float32).unsqueeze(0)
+        specgram = torchaudio.transforms.Spectrogram(n_fft=400, normalized=True)(waveform_tensor)
 
     elif spec_type == 'pytorch_melspec':
-        specgram = torchaudio.transforms.MelSpectrogram(sample_rate=sr, n_mels=40)(waveform)
+        waveform_tensor = torch.tensor(waveform, dtype=torch.float32).unsqueeze(0)
+        specgram = torchaudio.transforms.MelSpectrogram(sample_rate=sr, n_mels=40)(waveform_tensor)
 
     elif spec_type == 'pytorch_mfcc':
-        specgram = torchaudio.transforms.MFCC(sample_rate=sr, n_mfcc=40, log_mels=False, melkwargs={'n_fft': 800})(waveform)
+        waveform_tensor = torch.tensor(waveform, dtype=torch.float32).unsqueeze(0)
+        specgram = torchaudio.transforms.MFCC(sample_rate=sr, n_mfcc=40, log_mels=False, melkwargs={'n_fft': 800})(waveform_tensor)
 
     else:
         raise ValueError("spec_type not defined")

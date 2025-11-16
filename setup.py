@@ -12,7 +12,7 @@ long_description = readme_file.read_text(encoding='utf-8') if readme_file.exists
 
 setup(
     name="voicemd-gui",
-    version="1.0.1",
+    version="1.0.2",
     author="Honey181 (based on work by Jeremy Pinto)",
     author_email="",
     description="Modern offline voice analysis application",
