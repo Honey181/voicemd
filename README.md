@@ -24,6 +24,8 @@ A modern, offline voice analysis tool that predicts speaker characteristics base
 pip install voicemd-gui
 ```
 
+On some Linux distributions, eg. Arch Linux, you might need to use `pipx` instead of `pip`.
+
 Then run:
 
 ```bash
@@ -137,7 +139,12 @@ pip install --upgrade -r requirements_app.txt
 The app uses soundfile/librosa (no FFmpeg required). If you still get errors:
 - **Windows:** `choco install ffmpeg`
 - **macOS:** `brew install ffmpeg`
-- **Linux:** `sudo apt install ffmpeg`
+- **Linux:**
+  - **Debian-based (Ubuntu, Linux Mint)**: `sudo apt install ffmpeg`
+  - **Fedora**: `sudo dnf install ffmpeg-free`
+  - **Arch-based (Arch Linux, EndeavourOS, Manjaro)**: `sudo pacman -S ffmpeg`
+  - **openSUSE**: `sudo zypper install ffmpeg-4`
+  - **NixOS**: `sudo nix-env -iA nixos.ffmpeg`
 
 ### LLVM Version Compatibility (Linux)
 
